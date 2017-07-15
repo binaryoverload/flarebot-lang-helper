@@ -1,0 +1,29 @@
+@import "libs/simple-grid"
+@import "libs/reset"
+@import "node_modules/sassy-inputs/sass/main"
+
+$sassy-base-color: #777
+$sassy-accent-color: #25b9da
+$sassy-disabled-color: #eee
+
+*
+    font-family: Arial, Helvetica, sans-serif
+
+input[type=text],
+input[type=url],
+input[type=email],
+input[type=password],
+input[type=number] 
+  @include sassy-text
+  font-family: Arial, Helvetica, sans-serif
+
+
+.select-wrap
+  @include sassy-select
+  font-family: Arial, Helvetica, sans-serif
+
+
+input[type=submit],
+input[type=button],
+button
+  @include sassy-button

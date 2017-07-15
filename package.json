@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,15 @@
   "homepage": "https://github.com/binaryoverload/flarebot-lang-helper#readme",
   "dependencies": {
     "express": "^4.15.3",
+    "pg": "6.4.1",
+    "sassy-inputs": "^1.0.6",
     "unirest": "^0.5.1",
     "xid": "0.0.2"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.0"
   }
 }
