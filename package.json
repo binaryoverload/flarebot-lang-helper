@@ -1,0 +1,24 @@
+{
+  "name": "flarebot-lang-helper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/binaryoverload/flarebot-lang-helper.git"
+  },
+  "author": "BinaryOverload",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/binaryoverload/flarebot-lang-helper/issues"
+  },
+  "homepage": "https://github.com/binaryoverload/flarebot-lang-helper#readme",
+  "dependencies": {
+    "express": "^4.15.3",
+    "unirest": "^0.5.1",
+    "xid": "0.0.2"
+  }
+}
