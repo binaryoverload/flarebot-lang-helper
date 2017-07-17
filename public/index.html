@@ -17,13 +17,25 @@
         </div>
         <div class="row">
             <div class="col-3"></div>
-            <div class="col-6 center">
-                <form>
+            <div class="col-6">
+                <form method="POST" action="/form">
                     <div class="select-wrap">
                         <label for="lang-selector">Select a language: </label>
                         <select id="lang-selector">
                             <option value="option">English - UK</option>
                         </select>
+                    </div>
+                    <label for="path">Path to value:</label>
+                    <input id="path" name="path" type="text" placeholder="Path">
+
+                    <label for="value">Value:</label>
+                    <input id="value" name="value" type="text" placeholder="Value">
+
+                    <label for="code">Auth code:</label>
+                    <input id="code" name="code" type="text" placeholder="Auth Code">
+
+                    <div class="center">
+                        <input type="submit">
                     </div>
                 </form>
             </div>
