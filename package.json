@@ -19,6 +19,8 @@
   "homepage": "https://github.com/binaryoverload/flarebot-lang-helper#readme",
   "dependencies": {
     "express": "^4.15.3",
+    "express-handlebars": "^3.0.0",
+    "lodash": "^4.17.4",
     "pg": "6.4.1",
     "sassy-inputs": "^1.0.6",
     "unirest": "^0.5.1",
@@ -33,4 +35,4 @@
     "webpack": "^3.3.0",
     "webpack-stream": "^3.2.0"
   }
-} 
+}

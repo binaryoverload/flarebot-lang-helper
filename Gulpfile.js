@@ -3,7 +3,6 @@ var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('gulp-autoprefixer');
 var webpack = require('webpack');
-var livereload = require('gulp-livereload');
 
 gulp.task('styles', function () {
     gulp.src('sass/main.sass')
@@ -27,15 +26,8 @@ gulp.task("webpack", function (callback) {
     });
 });
 
-gulp.task("livereload", function() {
-    gulp.src(["public/**/*"])
-        .pipe(livereload());
-})
-
 //Watch task
 gulp.task('default', function () {
-    livereload.listen();
     gulp.watch('sass/main.sass', ['styles']);
     gulp.watch('**/*.js', ['webpack'])
-    gulp.watch('public/**/*', ["livereload"])
 });
