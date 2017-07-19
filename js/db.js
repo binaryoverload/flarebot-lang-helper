@@ -1,7 +1,7 @@
 const pg = require('pg');
 var pool;
 
-exports.init = function () {
+exports.init = function (callback) {
     pg.defaults.ssl = true;
     var db = process.env.DATABASE_URL;
     var pg_user = db.split(':')[1].replace("//", "");
@@ -21,15 +21,10 @@ exports.init = function () {
     };
 
     pool = new pg.Pool(config);
-
-    pool.connect((err, client, release) => {
-        if (err) {
-            return console.error('Error acquiring client', err.stack)
-        }
-        release()
-        console.info("Successfully connected to database!")
-    })
     
+    callback(pool);
+
+    return pool;
 
 }
 

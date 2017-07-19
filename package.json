@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/binaryoverload/flarebot-lang-helper#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "express-handlebars": "^3.0.0",
     "lodash": "^4.17.4",
@@ -28,11 +29,8 @@
   },
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^4.0.0",
-    "gulp-livereload": "^3.8.1",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.0",
-    "webpack": "^3.3.0",
-    "webpack-stream": "^3.2.0"
+    "webpack": "^3.3.0"
   }
 }

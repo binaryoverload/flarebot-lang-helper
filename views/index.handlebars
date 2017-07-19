@@ -8,8 +8,8 @@
     <div class="col-6">
         <form method="POST" action="/form">
             <div class="select-wrap">
-                <label for="lang-selector">Select a language: </label>
-                <select id="lang-selector">
+                <label for="lang">Select a language: </label>
+                <select id="lang" name="lang">
                             <option value="english-uk">English - UK</option>
                         </select>
             </div>
@@ -20,7 +20,7 @@
             <input id="value" name="value" type="text" placeholder="Value">
 
             <label for="code">Auth code:</label>
-            <input id="code" name="code" type="text" placeholder="Auth Code">
+            <input id="code" name="code" type="text" placeholder="Auth Code" {{#if code}}value={{code}}{{/if}}>
 
             <div class="center">
                 <input type="submit">
