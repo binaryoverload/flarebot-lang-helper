@@ -1,17 +1,15 @@
-const _ = require('lodash');
+var _ = require('lodash');
 
-exports.setValueAtPath = function (path, val, obj) {
-    var fields = path.split('.');
-    var result = obj;
-    for (var i = 0, n = fields.length; i < n && result !== undefined; i++) {
-      var field = fields[i];
-      if (i === n - 1) {
-        result[field] = val;
-      } else {
-        if (typeof result[field] === 'undefined' || !_.isObject(result[field])) {
-          result[field] = {};
-        }
-        result = result[field];
-      }
-    }
+exports.setValue = function (obj, path, value) {
+    obj = JSON.parse(obj);
+    return _.set(obj, path, value);
+}
+
+exports.sendFormError = function (res, message, fields) {
+    res.status(400);
+    res.type("application/json")
+    res.send({
+        "message": message,
+        "fields": fields,
+    });
 }

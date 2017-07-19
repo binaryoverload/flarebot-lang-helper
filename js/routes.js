@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var main;
 
 exports.initRoutes = function (index) {
@@ -18,17 +20,30 @@ exports.form = function (req, res) {
             return console.error('error running query', err);
         }
 
-        if (response.rows.length > 0 && response.rows.includes(code)) {
-
+        if (response.rows.length > 0 && (response.rows.filter((e) => e.xid == code).length > 0)) {
+            main.db.query("SELECT * FROM langs", [], function (err1, response1) {
+                if (err1) {
+                    return console.error('error running query', err1);
+                }
+                if (response1.rows.length > 0 && (response1.rows.filter((e) => e.langname == language).length > 0)) {
+                    if (_.has(JSON.parse(response1.rows[0].json, path)) && response.rows[0].admin != 1) {
+                        main.utils.sendFormError(res, "You do not have authorisation to overwrite values!", ["code"]);
+                    } else {
+                        var json = main.utils.setValue(response1.rows[0].json, path, value);
+                        main.db.query("UPDATE langs SET json=$1 WHERE langname=$2", [json, language], function (e, r) {
+                            if (e) {
+                                return console.error('error running query', e);
+                            }
+                        });
+                    }
+                } else {
+                    main.utils.sendFormError(res, "Language is invalid!", ["select-wrap"]);
+                    return;
+                }
+            });
         } else {
-            res.status(400);
-            res.type("application/json")
-            res.send({
-                "message": "Authentication Code is invalid!",
-                "fields": [
-                    "code",
-                ],
-            })
+            main.utils.sendFormError(res, "Authentication Code is invalid!", ["code"]);
+            return;
         }
     });
 }
@@ -48,7 +63,7 @@ exports.generate = function (req, res) {
         if (response.rows.length >= 20) {
             res.send("There are currently 20 codes registered! You cannot register another one!");
         } else {
-            main.pool.connect().then(function(client) {
+            main.pool.connect().then(function (client) {
                 var query = {
                     text: "INSERT INTO authcodes(xid, admin) VALUES($1, $2)",
                     values: [main.xid.generateId(), 0]

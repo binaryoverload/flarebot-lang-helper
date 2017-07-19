@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 // Modules
 const routes = require('./js/routes');
 const db = require('./js/db');
+const utils = require("./js/utils");
 
 let app = express();
 
@@ -27,7 +28,8 @@ var self = {
   "app": app,
   "pool": pool,
   "db": db,
-  "xid": xid
+  "xid": xid,
+  "utils": utils,
 }
 
 var pool = db.init(function(pool) {
