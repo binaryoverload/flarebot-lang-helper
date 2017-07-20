@@ -32,7 +32,9 @@ var self = {
   "utils": utils,
 }
 
-var pool = db.init(function(pool) {
+
+
+var pool = db.init(function (pool) {
   self.pool = pool;
   routes.initRoutes(self);
 });
