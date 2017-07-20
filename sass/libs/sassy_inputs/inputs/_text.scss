@@ -19,6 +19,10 @@
     border-color: $sassy-accent-color;
   }
 
+  &.error {
+    border-color: $sassy-error-color;
+  }
+
   &:disabled {
     background-color: $sassy-disabled-color;
     cursor: not-allowed;

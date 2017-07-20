@@ -1,6 +1,7 @@
 $sassy-base-color: #777 !default;
 $sassy-accent-color: coral !default;
 $sassy-disabled-color: #eee !default;
+$sassy-error-color: #ff4949;
 
 @import "helpers/px-to-rem";
 @import "helpers/appearance";

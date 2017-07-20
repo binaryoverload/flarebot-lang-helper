@@ -15,55 +15,58 @@ exports.form = function (req, res) {
     var value = req.body.value;
     var code = req.body.code;
 
+    var errors = {};
+
     main.db.query("SELECT * FROM authcodes", [], function (err, response) {
         if (err) {
             return console.error('error running query', err);
         }
+
         if (main.utils.checkAuthCode(response, code)) {
             var row = (response.rows.filter((e) => e.xid == code)[0]);
             if (!main.utils.checkUsageAndDecrement(main.db, response, code)) {
-                main.utils.sendFormError(res, "That authentication code has expired!", ["code"]);
-                return;
-            }
-            main.db.query("SELECT * FROM langs", [], function (err1, response1) {
-                if (err1) {
-                    return console.error('error running query', err1);
-                }
-                if (main.utils.checkLang(response1, language)) {
-                    var row1 = response1.rows[0]
-                    console.log(_.has(JSON.parse(row1.json), path));
-                    console.log(row.admin);
-                    if (_.has(JSON.parse(row1.json), path) && row.admin != 1) {
-                        main.utils.sendFormError(res, "You do not have authorisation to overwrite values!", ["code"]);
-                        return;
-                    } else {
-                        var json = main.utils.setValue(row1.json, path, value);
-                        main.db.query("UPDATE langs SET json=$1 WHERE langname=$2", [json, language], function (e, r) {
-                            if (e) {
-                                return console.error('Error running query', e);
-                            }
-                        });
-                        if (row.admin == 1) {
-                            res.status(200);
-                            res.send({
-                                "json": json,
-                                "message": "Successfully updated the language file for the language: " + language
-                            })
-                        } else {
-                            res.status(200);
-                            res.send({
-                                "message": "Successfully updated the language file for the language: " + language
-                            })
-                        }
+                errors.code = "That authentication code has expired!";
+            } else {
+                main.db.query("SELECT * FROM langs", [], function (err1, response1) {
+                    if (err1) {
+                        return console.error('error running query', err1);
                     }
-                } else {
-                    main.utils.sendFormError(res, "Language is invalid!", ["select-wrap"]);
-                    return;
-                }
-            });
+                    if (main.utils.checkLang(response1, language)) {
+                        var row1 = response1.rows[0]
+                        if (_.has(JSON.parse(row1.json), path) && row.admin != 1) {
+                            errors.code = "You do not have authorisation to overwrite values!";
+                        } else {
+                            var json = main.utils.setValue(row1.json, path, value);
+                            main.db.query("UPDATE langs SET json=$1 WHERE langname=$2", [json, language], function (e, r) {
+                                if (e) {
+                                    return console.error('Error running query', e);
+                                }
+                            });
+                            if (row.admin == 1) {
+                                res.status(200);
+                                res.send({
+                                    "json": json,
+                                    "message": "Successfully updated the language file for the language: " + language
+                                })
+                                return;
+                            } else {
+                                res.status(200);
+                                res.send({
+                                    "message": "Successfully updated the language file for the language: " + language
+                                })
+                                return;
+                            }
+                        }
+                    } else {
+                        errors["select-wrap"] = "Language is invalid!";
+                    }
+                });
+            }
         } else {
-            main.utils.sendFormError(res, "Authentication Code is invalid!", ["code"]);
-            return;
+            errors.code = "Authentication Code is invalid!";
+        }
+        if (!res.headerSent) {
+            main.utils.sendFormError(res, errors);
         }
     });
 }

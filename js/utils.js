@@ -5,11 +5,10 @@ exports.setValue = function (obj, path, value) {
     return _.set(obj, path, value);
 }
 
-exports.sendFormError = function (res, message, fields) {
+exports.sendFormError = function (res, fields) {
     res.status(400);
     res.type("application/json")
     res.send({
-        "message": message,
         "fields": fields,
     });
 }
@@ -57,12 +56,12 @@ exports.checkUsageAndDecrement = function (db, response, code) {
             expiryResult = true;
         }
     }
-    db.query("DELETE FROM authcodes WHERE xid=$1", [code], function (e, r) {
-        if (e) {
-            return console.error('Error running query', e);
-        }
-    });
-    console.log(expiryResult);
-    console.log(usageResult);
+    if (!(expiryResult && usageResult)) {
+        db.query("DELETE FROM authcodes WHERE xid=$1", [code], function (e, r) {
+            if (e) {
+                return console.error('Error running query', e);
+            }
+        });
+    }
     return expiryResult && usageResult;
 }
