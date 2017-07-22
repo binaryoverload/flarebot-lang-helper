@@ -27,6 +27,6 @@ gulp.task("webpack", function (callback) {
 
 //Watch task
 gulp.task('default', function () {
-    gulp.watch('sass/main.sass', ['styles']);
+    gulp.watch(['**/*.scss', '**/*.sass'], ['styles']);
     gulp.watch('**/*.js', ['webpack'])
 });

@@ -16,6 +16,12 @@
     display: none;
   }
 
+  &.error-border {
+    select {
+      border-color: $sassy-error-color;
+    }
+  }
+
   select {
     @include appearance-none;
 
@@ -35,6 +41,10 @@
     &:focus {
       border-color: $sassy-accent-color;
     }
+
+    //&.error-border {
+     // border-color: $sassy-error-color;
+    //}
 
     &:disabled {
       background-color: $sassy-disabled-color;

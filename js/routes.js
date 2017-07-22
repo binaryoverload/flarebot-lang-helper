@@ -1,4 +1,6 @@
 var _ = require('lodash');
+var http = require("http");
+var querystring = require("querystring");
 
 var main;
 
@@ -6,6 +8,7 @@ exports.initRoutes = function (index) {
     main = index;
     index.app.get('/', exports.index)
     index.app.post('/form', exports.form);
+    index.app.get('/json', exports.json);
     index.app.get('/generate', exports.generate);
 }
 
@@ -18,16 +21,16 @@ exports.form = function (req, res) {
     var errors = {};
 
     main.db.query("SELECT * FROM authcodes", [], function (err, response) {
-        if (err) {
-            return console.error('error running query', err);
-        }
+        main.db.query("SELECT * FROM langs", [], function (err1, response1) {
+            if (err) {
+                return console.error('error running query', err);
+            }
 
-        if (main.utils.checkAuthCode(response, code)) {
-            var row = (response.rows.filter((e) => e.xid == code)[0]);
-            if (!main.utils.checkUsageAndDecrement(main.db, response, code)) {
-                errors.code = "That authentication code has expired!";
-            } else {
-                main.db.query("SELECT * FROM langs", [], function (err1, response1) {
+            if (main.utils.checkAuthCode(response, code)) {
+                var row = (response.rows.filter((e) => e.xid == code)[0]);
+                if (!main.utils.checkUsageAndDecrement(main.db, response, code)) {
+                    errors.code = "That authentication code has expired!";
+                } else {
                     if (err1) {
                         return console.error('error running query', err1);
                     }
@@ -42,37 +45,32 @@ exports.form = function (req, res) {
                                     return console.error('Error running query', e);
                                 }
                             });
-                            if (row.admin == 1) {
-                                res.status(200);
-                                res.send({
-                                    "json": json,
-                                    "message": "Successfully updated the language file for the language: " + language
-                                })
-                                return;
-                            } else {
-                                res.status(200);
-                                res.send({
-                                    "message": "Successfully updated the language file for the language: " + language
-                                })
-                                return;
-                            }
+                            res.status(200);
+                            res.send({
+                                "lang": language,
+                                "json": json,
+                                "message": "Successfully updated the language file for the language: " + language
+                            })
+                            return;
                         }
                     } else {
                         errors["select-wrap"] = "Language is invalid!";
                     }
-                });
+
+                }
+            } else {
+                errors.code = "Authentication Code is invalid!";
             }
-        } else {
-            errors.code = "Authentication Code is invalid!";
-        }
-        if (!res.headerSent) {
-            main.utils.sendFormError(res, errors);
-        }
+            if (!res.headerSent) {
+                main.utils.sendFormError(res, errors);
+            }
+        });
     });
 }
 
 exports.index = function (req, res) {
     res.render('index', {
+        "title": "FlareBot Language File Editor",
         "code": req.query.authcode
     })
 }
@@ -95,6 +93,30 @@ exports.generate = function (req, res) {
                 client.release();
             });
             res.send("Generated!");
+        }
+    });
+}
+
+
+exports.json = function (req, res) {
+    main.db.query("SELECT * FROM langs", [], function (err, response) {
+        if (err) {
+            return console.error('Error running query', err);
+        }
+
+        if (main.utils.checkLang(response, req.query.lang)) {
+            var row = response.rows[0];
+            var json = JSON.parse(row.json);
+            res.render('json', {
+                "title": "JSON Viewer",
+                "lang": req.query.authcode,
+                "json": JSON.stringify(json, null, 4)
+            });
+        } else {
+            res.render('error', {
+                "Title": "Error",
+                "error": "Invalid Language"
+            })
         }
     });
 }
